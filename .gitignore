@@ -1,3 +1,8 @@
 .Rproj.user
 .Rhistory
 .RData
+docs/coptr.pdf
+docs/hessian.tex
+docs/KKT.tex
+docs/nullspace.tex
+docs/ToDo.txt
