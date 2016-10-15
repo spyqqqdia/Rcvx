@@ -1,0 +1,99 @@
+\section{Hessian}
+
+The Hessian of $f$ at a point $x$, denoted $B=H(f)(x)=\grad^2f(x)$, 
+is the second derivative of
+a function $f:\bbR^n\to\bbR$ at the point $x$ and hence a bilinear map
+$$
+B:\bbR^n\times\bbR^n\to\bbR.
+$$
+it is usually identified with the matrix
+$$
+H_{ij}=\grad^2f(x)(e_i,e_j)=\frac{\partial^2f}{\partial x_i\partial x_j}(x)
+$$
+and with this identification we have
+$$
+B(u,v)=u^THv.
+$$
+Let $f:\bbR^n\to\bbR$ be a $C^2$-function and $\ol f(u)=f(x_0+Fu)$, where  $x_0\in\bbR^n$
+and $F:\bbR^m\to\bbR^n$ is a linear map, i.e. $F\in Mat_{n\times m}$.
+
+We want to compute the gradient and Hessian of $h$ at any point $u$ from those of $f$.
+To get these do a second order Taylor expansion of $f$ about $x$:
+$$
+f(x+h)=f(x)+h^Tg+h^THh+o(\norm h^2),
+$$
+where $g=\grad f(x)$ and $H=\grad^2f(x)$ are uniquely determined by the fact that
+the residual is $o(\norm h^2)$. Applying this to the point $x=x_0+Fu$ this implies
+that
+%
+\begin{align*}
+\ol f(u+h)&=f(x_0+Fu+Fh)
+\\&=
+f(x_0+Fu)+(Fh)^Tg+(Fh)^THFh+o(\norm{Fh}^2).
+\end{align*}
+%
+Since $o(\norm{Fh}^2)$ is $o(\norm{h}^2)$ we conclude from this that
+$$
+\grad\ol f(u)=F^Tg\q\text{and}\q \grad^2\ol f(u)=F^THF,
+$$
+or, more explicitly
+%
+\begin{equation}
+\label{diff_lin_trans}
+\grad\ol f(u)=F^T\grad f(x_0+Fu)
+\q\text{and}\q
+\grad^2\ol f(u)=F^T\grad^2 f(x_0+Fu)F.
+\end{equation}
+%
+With a similar approach we can compute the Hessian of a composition $g(f(x))$, where
+here $g:\bbR\to\bbR$ is a scalar function of one variable (more general $g$ are much harder
+to handle and we do not need them).
+Indeed, set
+$$
+y=f(x),\q\grad=\grad f(x)\q H=\grad^2f(x)\text{and}\q k=h^T\grad+\tfrac{1}{2}h^THh
+$$
+and use second order Taylorapproximations on $f$ at
+the point $x$ and $g$ at the point $y=f(x)$ to obtain:
+%
+\begin{align*}
+g(f(x+h)))&=g\left(f(x)+h^T\grad+\tfrac{1}{2}h^THh\right)
+\\&=
+g(y+k)=g(y)+g'(y)+\tfrac{1}{2}g''(y)k^2+o(k^2)
+\\&=
+g(y)+g'(y)\left(h^T\grad+\tfrac{1}{2}h^THh\right)+
+\frac{1}{2}g''(y)\left(h^T\grad+\tfrac{1}{2}h^THh\right)^2+o(\norm h^2).
+\end{align*}
+%
+Here we have used that $o(k^2)=o(\norm h^2)$.
+Collect terms of first and second order in $h$ together and sticking
+all terms of higher order into the residual $o(\norm h^2)$. Note that
+the squared term contributes no first order terms and only one second order term,
+this being the term
+$$
+(h^T\grad)^2=
+(h^T\grad)(h^T\grad)=
+(h^T\grad)(h^T\grad)^T=
+h^T(\grad\grad^T)h.
+$$
+We obtain
+$$
+g(f(x+h)))=g(y)+h^T[g'(y)\grad]+
+\frac{1}{2}h^T\left[
+g'(y)H+g''(y)\grad\grad^T
+\right]h+o(\norm h^2).
+$$
+and from this we can read off that
+%
+\begin{align}
+\label{taylor_of_composition}
+\grad(g\circ f)(x)&=g'(f(x))\grad f(x),\q\text{and}\\
+H(g\circ f)(x)&=g'(f(x))H+g''(f(x))\grad f(x)\grad f(x)^T
+\end{align}
+%
+Note that here $d=\grad f(x)$ is viewed as a column vector and so $\grad f(x)\grad f(x)^T$
+is the \textit{outer product}
+$$
+\grad f(x)\grad f(x)^T=dd^T=(d_id_j)_{ij}.
+$$
+ 
+    

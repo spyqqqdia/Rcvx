@@ -1,0 +1,78 @@
+\section{Solving the KKT system}
+
+\subsection{KKT system without inequality constraints}
+
+If there are no inequality constraints, the KKT system has the form
+%
+\begin{align}
+\label{KKT}
+Hx+A'\nu&=-q\\
+Ax=b
+\end{align}
+%
+Here $H$ is symmetric and positive semidefinite (convexity!) and $A$ satisfies
+$ncol(A)=ncol(H)$. First we assume that $H$ is balanced and positive definite.
+Then we proceed as follows: do a Cholesky factorization $H=LL'$.
+Solve
+$$
+HX=LL'X=[A',q]\q\text{via}\q LY=[A',q]\text{ then }L'X=Y.
+$$
+Obtain $H^{-1}A'$ and $H^{-1}q$. From the first equation get
+$x=-H^{-1}(q+A'\nu)$. Stick this into the second equation to obtain
+$$
+AH^{-1}A'\nu=-(b+AH^{-1}q).
+$$
+Here the matrix $S=AH^{-1}A'$ is symmetric and positive semdefinite.
+It is also invertible since $A$ has full rank. Thus it is positive definite
+and can be solved with a Cholesky factorization
+$$
+S=R'R.
+$$
+Moreover this matrix is small ($p\times p$) and so this effort is negligible.
+We set $\mu=R\nu$ and solve for $\nu$ in 2 steps via
+$$
+R'\mu=-(b+AH^{-1}q)\text{ then }R\nu=\mu.
+$$
+Next we treat the general case. First we equilibrate the matrix $H$ by passing to
+$H\rightarrow DHD$, for a suitable diagonal matrix $D=diag(d)$ with $d_i\neq 0$,
+for all $i$. Setting $x=Dy$ we can rewrite
+(\ref{KKT}) as
+%
+\begin{align*}
+HDy+A'\nu&=-q\\
+ADy=b
+\end{align*}
+%
+Multiply the first equation with $D$ on the left to get
+%
+\begin{align}
+\label{KKT_D}
+My+B'\nu&=-Dq\\
+By=b
+\end{align}
+%
+with $M=DHD$ and $B=AD$. This system is of the same form but with a balanced
+matrix $M$ instead of $H$. I.e. we apply the transformation
+%
+\begin{equation}
+\label{D_transform}
+x\rightarrow y=D^{-1}x,\q H\rightarrow DHD,\q A\rightarrow AD,\q
+q\rightarrow Dq.
+\end{equation}
+%
+After solving this new system as outlined above we have to undo the
+transformation $x\rightarrow D^{-1}x$ by replacing $x\rightarrow Dx$.
+
+If now $DHD$ is not positive definite (this happens exactly if $H$ is not positive
+definite since the $d_i$ are all nonzero), we pass to the equivalent system
+%
+\begin{equation}
+\label{H_transform}
+DHD\rightarrow DHD+rA'A,\q
+-q\rightarrow -q+rA'b.
+\end{equation}
+%
+Here $DHD+rA'A$ is positive definite if and only if the KKT system (\ref{KKT_D}) itself
+is nonsingular. If it is singular, we stop. Assume now it is nonsingular.
+Then the new matrix $H$ is positive definite.
+

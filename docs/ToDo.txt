@@ -1,0 +1,78 @@
+#---------------------------------------------------------------
+2016_10_05:|
+-------------
+
+Replaced class KKTSolver with free standing functions in Solver.R.
+These use step-finders (search direction computation) in StepFinder.R.
+
+Status: all tests running and passing.
+
+We have to integrate the Ruiz equilibration into the step finding routines
+in StepFinder.R. Currently there is only a stub there.
+Search for "FIX ME".
+
+Write a test for unconstrained Newton on the Rosenbrook function
+(see TestFunctions.R).
+
+
+
+#---------------------------------------------------------------
+2016_10_07:|
+-------------
+
+In Utils.R method to compute the solution space of Ax=b via SVD
+and extended the test to include this.
+LateX documentation docs/nullspace.pdf added.
+
+Researched collections of test functions for convex optimization.
+Large collections exist but in very idiosyncratic textual data formats:
+
+.QPS format
+GAMS format
+lp format.
+
+All these formats require a parser to extract the problem into the
+code. 
+
+
+
+#---------------------------------------------------------------
+2016_10_07:|
+-------------
+
+Added affine dimension reduction to Constraints.
+Added test for ConstraintSet.
+
+Status: not working 
+
+The member function which is supposed to add new constraints to a 
+ConstraintSet does nothing.
+Problem distilled into ListTest.R and question asked on StackOverflow.
+
+
+#---------------------------------------------------------------
+2016_10_08:|
+-------------
+
+Problem was the fact that R does not support reference semantics.
+See ListTest.R
+
+Eliminated.
+Status: working
+This gives evidence that the affine transform and evaluation of inequalities
+are working correctly.
+
+Next: implement the class BarrierMethodMinimizer
+
+__Oddity detected__: 
+symmetry check Q=t(Q) in the constructor
+newQuadraticInequality fails at precision 2e-14 even though
+Q=crossprod(A), when a is a 20x20 random matrix with uniform entries
+in (0,2).
+We see max(abs(Q-t(Q))) as large as 2.7e-13.
+This does not depend on the libblas we are using.
+
+Investigate separately and also in Scala.
+
+
+

@@ -1,0 +1,219 @@
+\section{Nullspace}
+
+Here we discuss methods to solve an underdetermined set of  linear equations 
+$Ax=b$ where the number $n$ of variables is larger than the number $m$ of equations.
+In other words $A$ is an $m\times n$ matrix with $m<n$.
+
+The set of solutions is then the hyperplane $x_0+ker(A)$ where $ker(A)$ denotes 
+the nullspace of $A$ and $x_0$ is any particular solution of $Ax=b$. 
+
+We will represent the nullspace of $A$ as the columnspace
+$colspace(F)$ of a matrix $F$ such that 
+$$
+AF=0.
+$$
+If $F$ satisfies this equation, then the column space of $F$ is a subspace of 
+the null space $ker(A)$. Recall also that the column space of $F$ is the range
+$Im(F)$ of the linear map defined by the matrix $F$.
+
+We will generally assume that $A$ \textit{has full rank}, i.e. $rank(A)=m$.
+The nullspace $ker(A)$ then has dimension $n-m$ and the columns of $F$ span the entire
+nullspace of $A$ if and only if $rank(F)=n-m$.
+
+If we have found such a matrix $F$ and $x_0$ with $Ax_0=b$, then the hyperplane
+of all solutions to $Ax=b$ can be represented as
+$$
+x_0+ker(A)=x_0+Im(F).
+$$
+We want to apply this to the minimization problem 
+%
+\begin{equation}
+ \label{min_f_eqconstraints}
+\text{minimize }f:\bbR^n\to\bbR\text{ under the constraint }Ax=b.
+\end{equation}
+%
+Since the solutions $x$ to the constraint are exactly the vectors
+$x$ of the form $x=x_0+Fu$, $u\in\bbR^{n-m}$, we can turn this into the unconstrained
+problem
+%
+\begin{equation}
+ \label{min_f_gobal}
+\text{minimize }g(u)=f(x_0+Fu)\text{ on all of }\bbR^{n-m}.
+\end{equation}
+%
+Thereby we reduce the dimension of the problem from $n$ to $n-m$. In large scale problems
+one would not do this since this operation can destroy the sparseness of the Hessian $H(f)$
+which is critical for computation in very large dimensional problems.
+
+In dense small problem (up to say $n=3000$ variables) the 
+above elimination of the constraint $Ax=b$ is a reasonable approach. We will discuss two
+algorithms to finding $F$ and $x_0$. In both cases the columns of $F$ will be orthonormal
+and hence an orthornomal basis for the null space $ker(A)$.
+
+
+\subsection{Null space with QR-decomposition of $A$}
+
+This approach relies on the relation $ker(A)=Im(A')^\perp$, where the prime denotes the
+matrix transpose and $V^\perp$ is the orthogonal complement of a subspace $V$.
+Recall that
+%
+\begin{align*}
+n&=dim(ker(A))+dim(ker(A)^\perp)=dim(ker(A))+dim(Im(A'))
+\\&=
+(n-m)+dim(Im(A')).
+\end{align*}
+%
+Thus $dim(Im(A'))=m$.
+We will find the range $Im(A')$ and its orthogonal complement using the QR-decomposition
+of the transpose $A'$ (which has dimension $n\times m$, i.e. maps from $\bbR^m$ to $\bbR^n$):
+%
+\begin{equation}
+\label{QR_A}
+A'=QR,
+\end{equation}
+%
+where $Q$ is orthogonal and $R$ upper triangular with nonzero diagonal, where
+$R$ is $p\times m$ (i.e. maps from $\bbR^m\to\bbR^p$ and $Q$ is $m\times p$,
+i.e maps from $\bbR^p\to\bbR^m$.
+
+In such a factorization $Q$ and $R$ must be $n\times p$ and $p\times m$ respectively,
+since $A'$ is $n\times m$. Moreover $rank(Q)\geq rank(A')=rank(A)=m$ and so we must 
+have $p\geq m$. Because the columns of $Q$ are linearly independent and of dimension $n$
+we also must have $p\leq n$.
+
+Indeed such factorizations exist for all $m\leq p\leq n$ but in practice (i.e. available
+in libraries) there are only two flavours:
+
+\medskip\noindent
+(A) The reduced (minimal) form gives us $R$ as an $m\times m$ matrix
+and $Q=[q_1,\dots,q_m]$ as an $n\times m$ matrix with $m$-columns $q_j\in\bbR^n$.
+It follows that $R$ maps onto $\bbR^m=dom(Q)$ and hence 
+$$
+Im(A')=Im(Q)=span(q_1,\dots,q_m).
+$$
+From this we see that $ker(A)=Im(A')^\perp=span(q_1,\dots,q_m)^\perp$ but if we
+use the reduced form we have to compute this orthogonal complement ourselves.
+In other words we have to extend $\{\ths q_1,\dots,q_m\ths\}$ to an orthonormal basis
+$\{\ths q_1,\dots,q_m,q_{m+1},\dots q_n\ths\}$ of $\bbR^n$ ourselves.
+
+\smallskip\noindent
+In \texttt{R} the minimal form is obtained as follows
+$$
+\texttt{qrA <- qr(t(A));\ Q <- qr.Q(qrA);\ R <- qr.R(qrA)}
+$$
+Here we first compute a QR-decomposition object \texttt{qrA} and from this object 
+extract the matrices $Q$ and $R$ using the helper functions \texttt{qr.Q} and
+\texttt{qr.R}.
+
+The intermediate forms of the decomposition (\ref{QR_A}) with $m\leq p\leq n$
+extend this matrix $Q$ by adding (arbitrarily) orthonormal columns on the right
+$$
+Q \rightarrow Q_+=[q_1,\dots,q_m,q_{m+1},\dots q_p]
+$$
+and adjusting the matrix $R$ by adding zero rows at the bottom (so that $R$ becomes 
+$p\times m$. This of course does not change the matrix product $QR$ as we can see from block 
+multiplication
+$$
+Q_+=[Q,Q_1],\ 
+R_+=
+\begin{pmatrix}R\\0\end{pmatrix}
+\q\implies\q 
+Q_+R_+=QR+Q1*0 =QR.
+$$
+
+\smallskip\noindent
+(B) The full (maximal) form of the decomposition has $p=n$, that is, the columns
+of $Q$ have been extended to a full orthonormal basis of $\bbR^n$ and so clearly
+%
+\begin{equation}
+\label{nullspace_QR}
+ker(A)=Im(A')^\perp=span(q_1,\dots,q_m)^\perp=span(q_{m+1},\dots,q_n).
+\end{equation}
+%
+In other words the matrix $F$ can be chosen to be the matrix with columns
+$q_{m+1},\dots,q_n$:
+%
+\begin{equation}
+\label{mat_F}
+F=[q_{m+1},\dots,q_n]\in Mat_{n\times(n-m)}(\bbR).
+\end{equation}
+%
+To get a special solution $x_0$ of $Ax=b$ note that $A=R'Q'$ and solve
+the factored form $R'Q'x=b$. Set $y=Q'x$. 
+Then \textit{forward solve} the lower triangular system $R'y=b$ 
+and get $x$ from $Q'x=y$ as $x=Qy$.
+
+\smallskip\noindent
+To get the complete factorization $A'=Q_+R_+$ in \textit{R} we do
+$$
+\texttt{qrA <- qr(t(A));\ Qp <- qr.Q(qrA,complete=TRUE);\ R <- qr.R(qrA)}
+$$
+and then extract the matrix $Q$ via \texttt{Q <- Qp[,1:m]}. $R$ is already
+in incomplete form (no zero rows at bottom) since we have not specified
+\texttt{complete=TRUE} in the function \texttt{qr.R} (the default is
+\texttt{complete=FALSE}).
+
+With this the factorization of $A'$ becomes $A'=QR$ (and not $A'=QpR$) and this
+is what we need in the computation of the special solution $x_0$ above. 
+The QR factorization is computed by repeatedly applying (orthogonal) Householder
+updates and is thus a very stable algorithm.
+
+
+\subsection{Nullspace via SVD decomposition of $A$}
+
+We can also compute the nullspace $ker(A)$ and special solution $x_0$ of $Ax=b$ using
+the more involved \textit{SVD-decomposition} of $A$:
+$$
+A=U\Sigma V'
+$$
+where $U\in Mat_{m\times m}(\bbR)$ and $V\in Mat_{n\times m}(\bbR)$ are orthonormal matrices 
+and $\Sigma$ is an $m\times n$ diagonal matrix with entries
+$$
+\sigma_1\geq\sigma_2\dots\geq\sigma_m\geq 0
+$$
+(the singular values of $A$). Since $rank(A)=m$ we must have $\sigma_i>0$
+and so the matrix $\Sigma$ is invertible.
+Write $V=[v_1,\dots,v_m]$, where the $v_j\in\bbR^n$ are the columns of $V$.
+Thus, for all $x\in\bbR^n$,
+%
+\begin{align*}
+Ax=0\q&\iff\q U\Sigma V'x=0
+\\&\iff\q 
+\Sigma V'x=0
+\\&\iff\q 
+0=V'x=(v_1\cdot x,v_2\cdot x,\dots,v_m\cdot x)'=0
+\\&\iff\q
+x\perp\{\ths v_1,\dots,v_m\ths\}
+\\&\iff\q
+x\in span(v_{m+1},\dots,v_n)
+\end{align*}
+%
+In other words
+%
+\begin{equation}
+\label{nullspace_QR}
+ker(A)=span(v_{m+1},\dots,v_n).
+\end{equation}
+%
+where $v_{m+1},\dots,v_n\in\bbR^n$ are vectors which extend ${\ths v_1,\dots,v_m\ths}$
+to an ON-basis of $\bbR^n$. To get the full $n\times n$ matrix
+$$
+V_+=[V,v_{m+1},\dots,v_n]
+$$
+we must compute the SVD in \texttt{R} via 
+$$
+\texttt{svdA <- svd(A,nv=n); Vp <- svdA\$v; V <- V[,1:m]}
+$$
+Now a particular solution of $U\Sigma V'x=Ax=b$ can be found by solving
+$\Sigma V'x=U'b:=c$ which is equivalent to 
+$$
+V'x=(c_1/\sigma_1,\dots,c_m/\sigma_m)',
+$$
+A particular solution of this is given by
+%
+\begin{equation}
+\label{x0_SVD}
+x_0=Vw,\q\text{where}\q w=(c_1/\sigma_1,\dots,c_m/\sigma_m)'\in\bbR^m.
+\end{equation}
+%
+since the columns of $V$ are orthonormal.
