@@ -1,0 +1,2 @@
+# Rcvx
+Convex optimization, prototyping
