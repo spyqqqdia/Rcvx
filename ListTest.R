@@ -3,7 +3,8 @@
 # and operated on.
 #
 # You have to return that copy from the function and reassign that
-# copy to the original object when using the function
+# copy to the original object when using the function to change the
+# original object.
 #
 # Note how we have to set up and use the member function add
 # so the ListHolder object is changed.

@@ -1,10 +1,15 @@
-cat("Reading SolverTests.R")
+cat("Reading TestSolvers.R")
 flush.console()
 
 
+
+# Testing how accurately the systems for finding the Newton step are solved
+# (Cholesy factorization versus QR decomposition).
+#
 testKKTSolvers <- function(nTests){
 
     msg <- "\n\n\n#----Solving _without_ equilibration----#\n"
+    # switch in globals.R
     if(useEquilibration) msg <- "\n\n\n#----Solving _with_ equilibration----#\n"
     cat(msg)
   
@@ -52,7 +57,8 @@ timeReport <- function(nIter,operation,opID){
     cat("\n",opID,":\n")
     print(timeInfo)
 }
-# Time the solution of the various systems for n decision variables.
+# Time the solution of the various systems for n decision variables to see
+# how much slower the simpler algo using the QR-decomposition is.
 # The number p of equality constraints is comparably small, we use p=5.
 #
 timeKKTStepFinders <- function(n,nIter){

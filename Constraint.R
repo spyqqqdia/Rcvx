@@ -2,7 +2,8 @@ cat("Reading Constraint.R\n")
 flush.console()
 
 # General constraint of an optimization defined in terms of the value 
-# of a function f at a vector x.
+# of a function g at a vector x (typically g(x)<=0 but can also be g(x)=0
+# if g is of the affine form g(x)=Ax-b).
 #
 setClass("Constraint",
 representation(.ID="character", .dim="numeric"),

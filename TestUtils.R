@@ -118,8 +118,7 @@ show_SVD  <- function(){
 
 
 # Testing the computation of the null-space matrix of a random
-# mxn matrix A with uniform entries in (-1,1).
-# We must have m<n.
+# mxn matrix A with uniform entries in (-1,1). We must have m<n.
 #
 testNullSpaceBasisMatrix <- function(nTests,m,n){
 

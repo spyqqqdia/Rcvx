@@ -59,7 +59,7 @@ definition = function(this,constraint){
     }
     k <- length(this@.constraints)
     this@.constraints[[k+1]] <- constraint
-cat("\nnumber of constraints: ",length(this@.constraints))
+    this
 })
 # Add a set of inequality constraints ineqs to this set.
 setGeneric("addConstraints",
@@ -81,6 +81,7 @@ definition = function(this,constraints){
         this@.constraints[[k+1]] <- constraint
         k <- k+1
     }
+    this
 })
 
 # Report the status (satisfied, active) of each constraint at the point x.
@@ -151,6 +152,7 @@ definition = function(this,constraint){
     this@.constraints[[k+1]] <- constraint
     this@.b <- c(this@.b,constraint@.r)
     this@.A <- rbind(this@.A,constraint@.a)
+    this
 })
 setMethod("addConstraints",
 signature(this="SetOfEqualityConstraints",constraints="SetOfEqualityConstraints"),
@@ -170,6 +172,7 @@ definition = function(this,constraints){
     }
     this@.b <- c(this@.b,constraints@.b)
     this@.A <- rbind(this@.A,constraints@.A)
+    this
 })
 
 

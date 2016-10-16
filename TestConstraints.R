@@ -1,9 +1,8 @@
 # Build a list of inequality constraints, then check if they are 
 # satisfied at a point x=x0+Fu.
 #
-# The variable transform them via x=x0+Fu and check at a point u0
-# satisfying x=x0+Fu which must yield the same violated/satisfied
-# pattern.
+# Then variable transform them via x=x0+Fu and check them at a point u0
+# satisfying x=x0+Fu which must yield the same violated/satisfied pattern.
 #
 # The constraints will be constructed so that we know in advance 
 # if they are violated or satisfied at x and then the constraint ID will

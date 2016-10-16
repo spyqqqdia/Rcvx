@@ -7,12 +7,17 @@ source("TestSolvers.R")
 # source("run/runKKT.R")
 
 
+# How accurate are the Newton steps
+#
 if(FALSE){
 
     testKKTSolvers(5)
 }
 
 
+# How much slower is QR-decomposition than block elimination with
+# Cholesky factorization.
+#
 if(TRUE){
 
     n <- 500                   #  number of decision variables

@@ -10,12 +10,12 @@ flush.console()
 # (which are nonlinear) by linearizing them and using an iterative approach
 # (a generalization of Newton's root finding algorithm).
 #
-# The linear system which we treat here serve the purpose to compute the
+# The linear systems which we treat here serve the purpose to compute the
 # "full step" u from one iterate x to the next. The next iterate has the form 
 # x+su with s\in(0,1]. The full step x -> x+u is usually not taken and the
 # scalar s is computed by the backtracking line search algorithm.
 #
-# The step us is based on a quadratic Taylor approximation of the objective 
+# The step s*u is based on a quadratic Taylor approximation of the objective 
 # function f centered at the current iterate x. The full step x -> x+u will
 # hit the minimum only if f is quadratic and there are no constraints.
 #
@@ -60,6 +60,8 @@ solveNewtonStep <- function(H,grad){
     x <- backsolve(R,y)
     d*x
 }
+# Same but simpler and less efficient.
+#
 qrSolveNewtonStep <- function(H,grad) qr.solve(H,-grad)
 
 
@@ -133,7 +135,7 @@ checkDimensionsKKT <- function(H,A,grad,r){
 # nonlinear KKT system. In this case H=hessian(f)(x), grad = grad(f)(x) and
 # r is the residual r=b-Ax.
 #
-# The solution uses block elimination.
+# The solution uses block elimination, see boyd, section 10.4.2, p546, algorithm 10.3.
 # The matrix H is first balanced: H --> DHD, where D=diag(d) is computed with
 # the Ruiz algorithm.
 # If DHD (equivalently H) is not positive definite, it is augmented via
@@ -207,7 +209,7 @@ solveKKTStep_NoIneq <- function(H,A,grad,r,rho=1){
 #      Ax       = r
 #
 # The QR factorization on the entire KKT matrix is used.  See the previous
-# function for more details.
+# function for more details. Simpler but less efficient.
 #
 # @return solution w=c(x,\nu).
 #

@@ -18,7 +18,8 @@ flush.console()
 # steeper walls if this factor is increased). It is thus a good test function
 # for Newton methods to see if the path to the minimum bounces around from one
 # wall to the opposite wall necessitating many iterations before we converge
-# at the solution.
+# at the solution. This would definitely be the case when using first order
+# gradient methods.
 #
 # For the computation of the gradient and Hessian note that this is a sum of
 # coordinate-disjoint functions f(x,y)=100*(y-x^2)^2+(x-1)^2

@@ -13,7 +13,9 @@ flush.console()
 # Routine which update one iterative solution x to one of the nonlinear
 # KKT systems to the next x+s*u by starting with s=1 and backtracking
 # s -> bta*s until condition(x+s*u) returns TRUE _and_ the descent condition
-# f(x+su) <= f(x)+alpha*s*grad(x)'u.
+#          
+#            f(x+su) <= f(x)+alpha*s*grad(x)'u  
+# is satisfied.
 #
 # Stops with error if the constraint is not satisfied
 # either at x or after 50 iterations.
@@ -71,7 +73,7 @@ backtrack <- function(x,u,f,grad,condition,alpha,bta){
 residualNormUC <- function(u,grad) abs(sum((u*grad)))
 
 # Residual for the equality constrained KKT solver (no inequality constraints),
-# (see boyd, 10.3.1, p531:
+# (see boyd, 10.3.1, p531):
 #                                res(x) = (f_u(x),b-Ax)
 
 # @param grad: gradient of f at x.
@@ -132,13 +134,16 @@ solveNewton <- function(x0,f,grad,H,condition,alpha,bta,maxIter,eps){
 
 # Solution of the KKT condition
 #                                 grad_xL(x,\nu)=0
+#
 # for minimization of f with equality constraints of the form Ax=b but no
 # inequality constraints on a region C defined by condition, when it is known
 # that a minimum exists at an interior point of this region.
+#
+# Here L=L(x,\nu)=f(x)+\nu'(Ax-b) is the Lagrangian function of the problem.
 # This is used for the Barrier method with equality constraints.
 #
 # The region C={x\in R^n : condition(x)} is then irrelevant for the necessary
-# first order KKT conditions is relevant for the solver which starting at a
+# first order KKT conditions but is relevant for the solver which starting at a
 # point x0 satisfying this condition must maintain it for all iterates.
 #
 # This is an infeasible start algorithm which does not assumes Ax0=b.

@@ -3,7 +3,9 @@ source("ConstraintSet.R")
 source("TestConstraints.R")
 
 
-
+# Mainly checking if affine change of variables in the constraints
+# works correctly.
+#
 if(TRUE){
   
     n <- 20   # dimension
