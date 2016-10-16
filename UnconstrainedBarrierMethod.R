@@ -116,6 +116,51 @@ definition = function(this,u,t){
     this@.Hf(u) + t*sum
 })
 
+# @return TRUE if x0 satisfies the inequality constraints strictly,
+# FALSE otherwise.
+#
+setGeneric("isStrictlyFeasible",
+function(this,x0) standardGeneric("isStrictlyFeasible")
+)
+setMethod("isStrictlyFeasible",
+signature(this="UnconstrainedBarrierMethod",x0="numeric"),
+definition = function(this,x0){
+            
+    # find the corresponding variable u0, see Utils.R
+    u0 <- solutionSpaceParameter(x0,this@.w0,this@.F)
+    res <- TRUE
+    for(ineq in this@.dimReducedInequalities)
+        if(valueAt(ineq,u0)>=0) res <- FALSE
+    res
+})
+
+
+
+
+# Minimization starting from x=x0. See ConvexOptimizer.
+#
+setMethod("optimize",
+signature(
+    this="UnconstrainedBarrierMethod",x0="numeric",alpha="numeric",bta="numeric",
+    eps="numeric", verboseLevel="numeric"
+),
+definition = function(this,x0,alpha,bta,eps,verboseLevel){
+            
+    if(!isStrictlyFeasible(this,x0)){
+    
+        cat("\nUnconstrainedBarrierMethod::optimize: starting point not strictly feasible.") 
+        cat("\nStatus of constraints at starting point:\n")
+        reportStatusOfConstraintsAt(this@.inequalities,x0)
+        stop("Terminating.\n")
+    }
+    # FIX ME: no side conditions, no duality gap, so what do we use
+    # as a termination criterion?
+    
+  
+  
+})
+
+
 
 
 

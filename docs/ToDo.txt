@@ -65,14 +65,27 @@ are working correctly.
 Next: implement the class BarrierMethodMinimizer
 
 __Oddity detected__: 
+
 symmetry check Q=t(Q) in the constructor
 newQuadraticInequality fails at precision 2e-14 even though
-Q=crossprod(A), when a is a 20x20 random matrix with uniform entries
+Q=crossprod(A), when A is a 20x20 random matrix with uniform entries
 in (0,2).
 We see max(abs(Q-t(Q))) as large as 2.7e-13.
 This does not depend on the libblas we are using.
 
 Investigate separately and also in Scala.
+
+
+#---------------------------------------------------------------
+2016_10_16:|
+-------------
+
+Symmetry of A'A oddity not reproducible in targeted test.
+ToDO: 
+work on optimization method for unconstrained barrier method.
+We have no side conditions, therefore no duality gap so what do we use
+as a termination crieterion? 
+
 
 
 

@@ -25,6 +25,8 @@ flush.console()
 # coordinate-disjoint functions f(x,y)=100*(y-x^2)^2+(x-1)^2
 # with x=x_{2k-1} and y=x_{2k}.
 #
+# It should be noted that this function is not convex.
+#
 # @returns list(.f,.grad,.H), where f=f(.) is the function itself,  grad its
 # gradient and H its hessian (all are _functions_)
 #

@@ -161,38 +161,54 @@ testSolutionSpace <- function(nTests,m,n){
          stop(msg)
     }
 
-    cat("\nTesting nullSpaceMatrix.\n")
+    cat("\n###---- Testing solutionSpace of full rank underdetermined system ----###.\n")
     for(ii in 1:nTests){
 
+        cat("\n##--- Test ",ii,"\n")
         A <- matrix(2*runif(m*n)-1,nrow=m)
         b <- runif(m)
        
-        # with QR-decomposition of A
+        cat("\n#---Solution space with QR-decomposition of A:\n")
         sol <- solutionSpace(A,b)
-        x0 <- sol$.x0
-        Q <- sol$.Q
+        w0 <- sol$.w0
+        F <- sol$.F
 
-        error <- sum((A%*%x0-b)^2)
-        cat("\nwith QR-decomposition x0 satisfies Ax0=b, error = ",error,"\n")
+        error <- sqrt(crossprod(A%*%w0-b))
+        cat("\nwith QR-decomposition x0 satisfies Ax0=b, error (L2 norm) = ",error,"\n")
 
-        X <- A%*%Q                     # must be zero
+        X <- A%*%F                    # must be zero
         error <- sqrt(sum(X*X)/(m*n))
-        cat("with QR-decomposition A annihilates the column space of Q, error = ",error,"\n")
+        cat("with QR-decomposition A annihilates the column space of Q, error (HS-norm) = ",error)
+        
+        u0 <- runif(n-m)
+        x0 <- w0 + F%*%u0
+        u <- solutionSpaceParameter(x0,w0,F)
+        error <- sqrt(crossprod(u0-u))
+        cat("\nsolutionSpaceParameter, error (L2-norm) = ",error,"\n")
         
         
-        # with QR-decomposition of A
+        cat("\n#---Solution space with SVD-decomposition of A:\n")
         sol <- solutionSpace_SVD(A,b)
-        x0 <- sol$.x0
-        Q <- sol$.Q
+        w0 <- sol$.w0
+        F <- sol$.F
 
-        error <- sum((A%*%x0-b)^2)
-        cat("\nwith SVD-decomposition x0 satisfies Ax0=b, error = ",error,"\n")
+        error <- sqrt(crossprod(A%*%w0-b))
+        cat("\nwith SVD-decomposition x0 satisfies Ax0=b, error (L2-norm) = ",error,"\n")
 
-        X <- A%*%Q
+        X <- A%*%F
         error <- sqrt(sum(X*X)/(m*n))
-        cat("with SVD-decomposition A annihilates the column space of Q, error = ",error,"\n")
+        cat("with SVD-decomposition A annihilates the column space of Q, error (HS-norm) = ",error)
+        
+        u0 <- runif(n-m)
+        x0 <- w0 + F%*%u0
+        u <- solutionSpaceParameter(x0,w0,F)
+        error <- sqrt(crossprod(u0-u))
+        cat("\nsolutionSpaceParameter, error (L2-norm) = ",error,"\n")
     }
 }
+
+
+
 
 
 # Checking if we have a numerical problem (blas? processor?)

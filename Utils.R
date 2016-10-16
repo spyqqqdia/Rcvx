@@ -72,19 +72,19 @@ nullSpaceBasisMatrix <- function(A){
     Q[,(p+1):n]
 }
 
-# Computes the space of solutions of Ax=b as a pair (x0,Q), where x0 is a
-# particular solution and the columns of the matrix Q are an orthogonal basis
-# for the kernel ker(A): Im(Q)=colspace(Q)=ker(A).
+# Computes the space of solutions of Ax=b as a pair (w0,F), where w0 is a
+# particular solution and the columns of the matrix F are an orthogonal basis
+# for the kernel ker(A): Im(F)=colspace(F)=ker(A).
 #
 # Then the set of all solutions is the hyperplane
-#          x0+Im(Q) = x0+span(columns of Q)
+#          w0+Im(F) = w0+span(columns of F)
 #
 # A must be an mxn matrix with m<n and full rank(A)=m. In this case a solution
 # is guaranteed to exist.
 # This function uses the QR-decomposition of A.
 # See doc/nullspace, section 1.1, p1.
 #
-# @ return list(.x0,.Q).
+# @ return list(.w0,.F).
 #
 solutionSpace <- function(A,b){
 
@@ -97,9 +97,9 @@ solutionSpace <- function(A,b){
     # note A=R'Q' and so solve R'Q'x=b, set y=Q'x, solve R'y=b,...
     y0 <- forwardsolve(t(R),b)
     P <- Q[,1:m]
-    x0 <- P%*%y0
+    w0 <- P%*%y0
 
-    list(.x0=x0,.Q=Q[,(m+1):n])
+    list(.w0=w0,.F=Q[,(m+1):n])
 }
 
 
@@ -120,19 +120,19 @@ nullSpaceBasisMatrix_SVD <- function(A){
     Vp[,(m+1):n]
 }
 
-# Computes the space of solutions of Ax=b as a pair (x0,Q), where x0 is a
-# particular solution and the columns of the matrix Q are an orthogonal basis
-# for the kernel ker(A): Im(Q)=colspace(Q)=ker(A).
+# Computes the space of solutions of Ax=b as a pair (w0,F), where w0 is a
+# particular solution and the columns of the matrix F are an orthogonal basis
+# for the kernel ker(A): Im(F)=colspace(F)=ker(A).
 #
 # Then the set of all solutions is the hyperplane
-#          x0+Im(Q) = x0+span(columns of Q)
+#          w0+Im(F) = w0+span(columns of F)
 #
 # A must be an mxn matrix with m<n and full rank(A)=m. In this case a solution
 # is guaranteed to exist.
 # This function uses the SVD-decomposition of A.
 # See doc/nullspace, section 1.2, p3.
 #
-# @ return list(.x0,.Q).
+# @ return list(.w0,.F).
 #
 solutionSpace_SVD <- function(A,b){
 
@@ -148,9 +148,19 @@ solutionSpace_SVD <- function(A,b){
    
     vec_c <- t(U)%*%b           
     w <- vec_c/d
-    x0 <- V%*%w
+    w0 <- V%*%w
 
-    list(.x0=x0,.Q=Vp[,(m+1):n])
+    list(.w0=w0,.F=Vp[,(m+1):n])
 }
+
+# Given a solution x0 of Ax=b (underdetermined, full rank) as well as a 
+# parametrization of the solutions as x=w0+Fu where F has orthonormal
+# columns
+#
+# @return a parameter u0 such that x0 = w0+Fu0.
+#
+solutionSpaceParameter <- function(x0,w0,F){ t(F)%*%(x0-w0) }
+
+
 
 

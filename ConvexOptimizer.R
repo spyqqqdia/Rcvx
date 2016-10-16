@@ -30,6 +30,34 @@ prototype(
 ))
 
 
+
+# Minimize starting from initial point x=x0 with parameters
+# alpha, bta for the backtracking line search.
+#
+# @param eps: termination as soon as norm of residual beow eps.
+#
+setGeneric("optimize",
+function(this,x0,alpha,bta,eps,verboseLevel) standardGeneric("optimize")
+)
+
+
+# Minimize without starting point with parameters
+# alpha, bta for the backtracking line search.
+#
+setGeneric("optimize",
+function(this,alpha,bta,eps,verboseLevel) standardGeneric("optimize")
+)
+
+
+# Feasibility analysis (Phase I in boyd terminology).
+# @return feasible starting point or certificate of infeasibility.
+#
+setGeneric("findStartingPoint",
+function(this) standardGeneric("findStartingPoint")
+)
+
+
+
 # Abstract base class will be fully intialized from concrete 
 # subclasses, therefore no constructor factory method defined here.
 
