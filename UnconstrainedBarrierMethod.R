@@ -85,7 +85,7 @@ definition = function(this,u,t){
     sum <- 0.0
     for(ineq in this@.dimReducedInequalities)
         sum <- sum - log(-valueAt(ineq,u))
-    this@.f(u) + t*sum
+    t*this@.f(u) + sum
 })
 
 # See ConvexOptimizer.
@@ -97,7 +97,7 @@ definition = function(this,u,t){
     sum <- 0.0
     for(ineq in this@.dimReducedInequalities)
         sum <- sum - gradientAt(ineq,u)/valueAt(ineq,u)
-    this@.gradf(u) + t*sum
+    t*this@.gradf(u) + sum
 })
 
 # See ConvexOptimizer.
@@ -113,7 +113,7 @@ definition = function(this,u,t){
         g <- gradientAt(ineq,u)
         sum <- sum - hessianAt(ineq,u)/r + outer(g,g)/(r*r)
     }
-    this@.Hf(u) + t*sum
+    t*this@.Hf(u) + sum
 })
 
 # @return TRUE if x0 satisfies the inequality constraints strictly,
@@ -153,8 +153,9 @@ definition = function(this,x0,alpha,bta,eps,verboseLevel){
         reportStatusOfConstraintsAt(this@.inequalities,x0)
         stop("Terminating.\n")
     }
-    # FIX ME: no side conditions, no duality gap, so what do we use
-    # as a termination criterion?
+    # recall duality gap at central point x(t) is m/t,  where m is the number
+    # of inequalitiy constraints, [boyd], p565,566
+    
     
   
   

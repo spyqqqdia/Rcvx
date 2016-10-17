@@ -67,10 +67,10 @@ function(this) standardGeneric("findStartingPoint")
 
 # The objective function $f_t$ with weight t in the barrier method:
 #
-#            $f_t(x) = f(x)-t\sum_i\log(-g_i(x))$,
+#            $f_t(x) = tf(x)-\sum_i\log(-g_i(x))$,
 #
 # where $g_i(x)\leq 0$ are the inequality constraints. In this formulation
-# t -> 0 in the iterations of the optimization.
+# t -> +oo in the iterations of the optimization.
 #
 setGeneric("barrierFunction",
 function(this,u,t) standardGeneric("barrierFunction")
